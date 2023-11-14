@@ -18,7 +18,7 @@ local g_MathCeil		= math.ceil
 local g_MathFloor		= math.floor
 local g_MathMax			= math.max
 local g_MathMin			= math.min
-				
+
 local Players 			= Players
 local HexToWorld 		= HexToWorld
 local ToHexFromGrid 	= ToHexFromGrid
@@ -31,7 +31,7 @@ local Teams 			= Teams
 ------------------------------------------------------------------------------------------------------------------------
 --HasTrait
 function HasTrait(player, traitID)
-	if Player.HasTrait then 
+	if Player.HasTrait then
 		return player:HasTrait(traitID)
 	else
 		local leaderType = GameInfo.Leaders[player:GetLeaderType()].Type
@@ -85,7 +85,7 @@ local function Senshi_Tito_LoadScreenClose()
 		if player:IsAlive() then
 			if player:GetCivilizationType() == GameInfoTypes["CIVILIZATION_SENSHI_YUGOSLAVIA"] then
 				if (not player:HasPolicy(policyTitoID)) then
-					if Player.GrantPolicy then 
+					if Player.GrantPolicy then
 						player:GrantPolicy(policyTitoID, true)
 					else
 						player:SetNumFreePolicies(1)
@@ -119,10 +119,10 @@ local function Senshi_Tito_PlayerDoTurn(playerID)
 	if (not player:IsAlive()) then return end
 	if player:IsMinorCiv() then return end
 	if player:IsBarbarian() then return end
-	
+
 	local playerCapital = player:GetCapitalCity()
 	if (not playerCapital) then return end
-	
+
 	if player:GetCivilizationType() == civilizationTitoID then
 		for city in player:Cities() do
 			city:SetNumRealBuilding(buildingDummySpomenikCultureID, 0)
@@ -137,7 +137,7 @@ local function Senshi_Tito_PlayerDoTurn(playerID)
 				end
 			end
 		end
-		
+
 		for unit in player:Units() do
 			if unit:GetUnitType() == unitPartisanID then
 				unit:SetHasPromotion(promotionPartisanRangeID, false)
@@ -150,7 +150,7 @@ local function Senshi_Tito_PlayerDoTurn(playerID)
 						local playerTeam = Teams[player:GetTeam()]
 						if playerTeam:IsAtWar(adjUnitOwnerTeamID) then
 							unit:SetHasPromotion(promotionPartisanRangeID, true)
-							break 
+							break
 						end
 					end
 				end
@@ -167,7 +167,7 @@ local function Senshi_Tito_CityTrained(playerID, cityID, unitID, isGold, isFaith
 
 	local city = player:GetCityByID(cityID)
 	local unit = player:GetUnitByID(unitID)
-	
+
 	if player:GetCivilizationType() == civilizationTitoID then
 		local playerTeam = Teams[player:GetTeam()]
 		if playerTeam:GetAtWarCount(true) > 0 then
@@ -189,7 +189,7 @@ local function Senshi_Tito_UnitPromoted(playerID, unitID)
 	if (not player:IsAlive()) then return end
 
 	local unit = player:GetUnitByID(unitID)
-	
+
 	if player:GetCivilizationType() == civilizationTitoID then
 		if unit:GetUnitType() == unitPartisanID then
 			local numLevel = unit:GetLevel()
@@ -205,26 +205,26 @@ end
 GameEvents.UnitPromoted.Add(Senshi_Tito_UnitPromoted)
 ------------------------------------------------------------------------------------------------------------------------
 --Senshi_Tito_UnitPrekill
-local function Senshi_Tito_UnitPrekill(unitOwnerID, unitID, unitType, plotX, plotY, isDelay, killingPlayerID)
-	local player = Players[killingPlayerID]
-	if unitOwnerID == killingPlayerID then return end
-	if (not player) then return end
-	if (not player:IsAlive()) then return end
-
-	local playerCapital = player:GetCapitalCity()
-	if (not playerCapital) then return end
-	
-	if player:GetCivilizationType() == civilizationTitoID then
-		local plot = Map.GetPlot(plotX, plotY)
-		local plotCity = plot:GetWorkingCity()
-		if plotCity and plotCity:GetOwner() == killingPlayerID then
-			if plotCity:IsHasBuilding(buildingSpomenikID) then
-				local numCulture = plotCity:GetNumRealBuilding(buildingDummySpomenikCultureID)+1
-				plotCity:SetNumRealBuilding(buildingDummySpomenikCultureID, numCulture)
-			end
-		end
-	end
-end
-GameEvents.UnitPrekill.Add(Senshi_Tito_UnitPrekill)
+-- local function Senshi_Tito_UnitPrekill(unitOwnerID, unitID, unitType, plotX, plotY, isDelay, killingPlayerID)
+-- 	local player = Players[killingPlayerID]
+-- 	if unitOwnerID == killingPlayerID then return end
+-- 	if (not player) then return end
+-- 	if (not player:IsAlive()) then return end
+--
+-- 	local playerCapital = player:GetCapitalCity()
+-- 	if (not playerCapital) then return end
+--
+-- 	if player:GetCivilizationType() == civilizationTitoID then
+-- 		local plot = Map.GetPlot(plotX, plotY)
+-- 		local plotCity = plot:GetWorkingCity()
+-- 		if plotCity and plotCity:GetOwner() == killingPlayerID then
+-- 			if plotCity:IsHasBuilding(buildingSpomenikID) then
+-- 				local numCulture = plotCity:GetNumRealBuilding(buildingDummySpomenikCultureID)+1
+-- 				plotCity:SetNumRealBuilding(buildingDummySpomenikCultureID, numCulture)
+-- 			end
+-- 		end
+-- 	end
+-- end
+-- GameEvents.UnitPrekill.Add(Senshi_Tito_UnitPrekill)
 --=======================================================================================================================
 --=======================================================================================================================

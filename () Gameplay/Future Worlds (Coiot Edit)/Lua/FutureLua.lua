@@ -85,7 +85,6 @@ local wonderAccelerator = GameInfoTypes["BUILDING_FW_ACCELERATOR"]
 local wonderAngelnet = GameInfoTypes["BUILDING_FW_ANGELNET"]
 local wonderAngelnetDummy = GameInfoTypes["BUILDING_FW_ANGELNET_DUMMY"]
 local wonderBionicTower = GameInfoTypes["BUILDING_FW_BIONICTOWER"]
-local wonderBionicTower = GameInfoTypes["BUILDING_FW_BIONICTOWER"]
 local wonderBorehole = GameInfoTypes["BUILDING_FW_BOREHOLE"]
 local wonderBuenosAiresForum = GameInfoTypes["BUILDING_FW_BUENOSAIRESFORUM"]
 local wonderDataHaven = GameInfoTypes["BUILDING_FW_DATA_HAVEN"]
@@ -162,7 +161,7 @@ local poHeliosDummy = GameInfoTypes["POLICY_HELIOS_DUMMY"]
 local iAdjacentFungusModifier = 1
 local iChanceDinos = 7
 local iChanceForFungus = 1
-local iChanceMissileProduction = 33
+-- local iChanceMissileProduction = 33
 
 local bGeneVaultCompleted = false
 local bBionicTowerCompleted = false
@@ -227,7 +226,7 @@ function CheckUploading(iPlotX, iPlotY, iOldPop, iNewPop)
 end
 GameEvents.SetPopulation.Add(CheckUploading)
 
-function CheckImprovements (iHexX, iHexY, iContinent1, iContinent2)
+function CheckImprovements(iHexX, iHexY, iContinent1, iContinent2)
 	local pPlot = Map.GetPlot(ToGridFromHex(iHexX, iHexY))
 	local ImpID = pPlot:GetImprovementType()
 	local Owner = pPlot:GetOwner()
@@ -346,12 +345,12 @@ function FutureTurnBonuses(iPlayer)
 		end
 
 		-- Telepresence Hub Building
-		if pCity:IsHasBuilding(buildingTelepresenceHub) then
-			local iNumCyberclincs = math.min(10, player:GetBuildingClassCount(iBuildingCyberclincClass))
-			pCity:SetNumRealBuilding(buildingTelepresenceDummy, iNumCyberclincs)
-		else
-			pCity:SetNumRealBuilding(buildingTelepresenceDummy, 0)
-		end
+		-- if pCity:IsHasBuilding(buildingTelepresenceHub) then
+		-- 	local iNumCyberclincs = math.min(10, player:GetBuildingClassCount(iBuildingCyberclincClass))
+		-- 	pCity:SetNumRealBuilding(buildingTelepresenceDummy, iNumCyberclincs)
+		-- else
+		-- 	pCity:SetNumRealBuilding(buildingTelepresenceDummy, 0)
+		-- end
 
 		-- Orbital Habitat building
 		if pCity:IsHasBuilding(buildingOrbitalHabitat) then
@@ -377,40 +376,39 @@ function FutureTurnUnitEffects(iPlayer)
 	for pUnit in player:Units() do
 		local iType = pUnit:GetUnitType()
 
-		Crawler effects
-		if iType == unitCrawler then
-			local iCheckForMissileProduction = JFD_GetRandom(1, 100)
-			if (iCheckForMissileProduction < iChanceMissileProduction) then
-				local pPlot = pUnit:GetPlot()
-				if pPlot then
-					local iNumMissiles = 0
-					for iVal = 0,(pPlot:GetNumUnits() - 1) do
-						local loopUnit = pPlot:GetUnit(iVal)
-						if loopUnit:GetUnitType() == unitHyperMissile then
-							iNumMissiles = iNumMissiles + 1
-						end
-					end
-					if iNumMissiles < 3 then
-						player:InitUnit(unitHyperMissile, pPlot:GetX(), pPlot:GetY())
-					end
-				end
-			end
-		end
+		-- if iType == unitCrawler then
+		-- 	local iCheckForMissileProduction = JFD_GetRandom(1, 100)
+		-- 	if (iCheckForMissileProduction < iChanceMissileProduction) then
+		-- 		local pPlot = pUnit:GetPlot()
+		-- 		if pPlot then
+		-- 			local iNumMissiles = 0
+		-- 			for iVal = 0,(pPlot:GetNumUnits() - 1) do
+		-- 				local loopUnit = pPlot:GetUnit(iVal)
+		-- 				if loopUnit:GetUnitType() == unitHyperMissile then
+		-- 					iNumMissiles = iNumMissiles + 1
+		-- 				end
+		-- 			end
+		-- 			if iNumMissiles < 3 then
+		-- 				player:InitUnit(unitHyperMissile, pPlot:GetX(), pPlot:GetY())
+		-- 			end
+		-- 		end
+		-- 	end
+		-- end
 
 		if bIsAlive then
 			-- Healing adjacent to core
 			local pPlot = pUnit:GetPlot()
 			local bCorePresent = false
-			for pAdjacentPlot in PlotAreaSpiralIterator(pPlot, 1, SECTOR_NORTH, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
-				local iImprovement = pAdjacentPlot:GetImprovementType()
-				local iOwner = pAdjacentPlot:GetOwner()
-				if (iImprovement == improvementCore) and (iOwner == iPlayer) then
-					bCorePresent = true
-				end
-			end
-			if bCorePresent and (pUnit:GetDamage() > 0) then
-				pUnit:ChangeDamage(-5)
-			end
+			-- for pAdjacentPlot in PlotAreaSpiralIterator(pPlot, 1, SECTOR_NORTH, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
+			-- 	local iImprovement = pAdjacentPlot:GetImprovementType()
+			-- 	local iOwner = pAdjacentPlot:GetOwner()
+			-- 	if (iImprovement == improvementCore) and (iOwner == iPlayer) then
+			-- 		bCorePresent = true
+			-- 	end
+			-- end
+			-- if bCorePresent and (pUnit:GetDamage() > 0) then
+			-- 	pUnit:ChangeDamage(-5)
+			-- end
 
 			-- Nanohive effects
 			if pUnit:IsHasPromotion(promotionNanohive) then
@@ -1001,14 +999,14 @@ end
 function ShimizuCompleted(ownerId, cityId, buildingType, bGold, bFaithOrCulture)
 	if buildingType == wonderShimizu then
 		local owner = Players[ownerId]
-		for city in owner:Cities() do
-			if city:IsHasBuilding(wonderShimizu) then
-				local iNumServers = player:GetBuildingClassCount(buildingClassServerHub)
-				city:SetNumRealBuilding(wonderDataHavenDummy, iNumServers)
-			else
-				city:SetNumRealBuilding(wonderDataHavenDummy, 0)
-			end
-		end
+		-- for city in owner:Cities() do
+		-- 	if city:IsHasBuilding(wonderShimizu) then
+		-- 		local iNumServers = player:GetBuildingClassCount(buildingClassServerHub)
+		-- 		city:SetNumRealBuilding(wonderDataHavenDummy, iNumServers)
+		-- 	else
+		-- 		city:SetNumRealBuilding(wonderDataHavenDummy, 0)
+		-- 	end
+		-- end
 		GameEvents.CityCaptureComplete.Add(ShimizuCityCaptured)
 		GameEvents.PlayerDoTurn.Add(ShimizuDoTurn)
 	end
@@ -1136,52 +1134,80 @@ end
 GameEvents.CanHaveAnyUpgrade.Add(FWUnitUpgradeRestrictions)
 
 function FWUnitRestrictions(iPlayer, iCity, iUnit)
+
 	local player = Players[iPlayer]
-	if (not player:IsAlive()) then return end
+	if player:IsAlive() then
+
 		if iUnit == unitRobotInfantry then
 			if player:GetBuildingClassCount(wonderClassSkynet) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitSwarm) then
+		end
+
+		if (iUnit == unitSwarm) then
 			if player:GetBuildingClassCount(wonderClassPholusMutagen) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitOrganicInfantry) then
+		end
+
+
+		if (iUnit == unitOrganicInfantry) then
 			if player:GetBuildingClassCount(wonderClassNephilim) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitPowerArmor) then
+		end
+
+
+		if (iUnit == unitPowerArmor) then
 			if player:GetBuildingClassCount(wonderClassMnemosyne) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitHydra) then
+		end
+
+
+		if (iUnit == unitHydra) then
 			if player:GetBuildingClassCount(wonderClassPholusMutagen) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitBioTrooper) then
+		end
+
+
+		if (iUnit == unitBioTrooper) then
 			if player:GetBuildingClassCount(wonderClassNephilim) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitAutomaton) then
+		end
+
+		if (iUnit == unitAutomaton) then
 			if player:GetBuildingClassCount(wonderClassMnemosyne) > 0 then
 				return true
+			else
+				return false
 			end
-			return false
-		elseif (iUnit == unitTRex) then
+		end
+
+		if (iUnit == unitTRex) then
 			if player:GetBuildingClassCount(wonderClassJurassicPark) > 0 then
 				local pTeam = Teams[player:GetTeam()]
 				if pTeam:IsHasTech(techGengineering) then return true end
+			else
+				return false
 			end
-			return false
 		end
-	return true
 	end
+end
 GameEvents.CityCanTrain.Add(FWUnitRestrictions)
 
 -- function SpaceStationRequirement(playerID, buildingType)

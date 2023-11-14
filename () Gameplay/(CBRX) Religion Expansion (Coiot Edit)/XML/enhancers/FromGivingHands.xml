@@ -23,17 +23,17 @@
 			<YieldChange>-15</YieldChange>
 		</Row>
 	</Belief_BuildingClassYieldChanges>
-	
+
 	<Belief_CityYieldChanges>
 		<Row>
 			<BeliefType>BELIEF_FROMGIVINGHANDS</BeliefType>
 			<YieldType>YIELD_FOOD</YieldType>
-			<Yield>-3</Yield>
+			<Yield>3</Yield>
 		</Row>
 		<Row>
 			<BeliefType>BELIEF_FROMGIVINGHANDS</BeliefType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>-3</Yield>
+			<Yield>3</Yield>
 		</Row>
 	</Belief_CityYieldChanges>
 
